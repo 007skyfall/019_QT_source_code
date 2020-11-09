@@ -1,0 +1,96 @@
+回顾：
+	1. QPainter类
+	
+	paintEvent()事件处理函数--虚函数
+	
+	这里用到多态的概念
+	
+	2. QIamge类   图像类
+	
+	3. QTimer类   定时器的类
+	
+	4. QTime类     时间类
+	
+	5. QRandomGenerator类   产生随机数的类
+	
+	6. QList类
+	
+		QList <QNetworkInterface> interfacelist = ;
+	
+		interfacelist.at(i);
+		interfacelist.count();计算容器中存储多少这样的数据
+	
+	7. QHostInfo类   主机信息类
+	
+	8. QNetworkInterface类   网络接口的类
+	
+
+##############################################
+【1】案例：基于UDP的广播
+	发送端：senderDialog
+		socked
+		发送数据
+		
+		QUdpSocked类 ：创建套接字
+			1. qint64 QUdpSocket::writeDatagram(
+				const QByteArray &datagram,   发送的数据
+				const QHostAddress &host,  主机地址
+				quint16 port)  端口号
+				
+		QString类
+			QByteArray QString::toLocal8Bit() const
+				将QString ---》QByteArray类型
+	
+	接收端：receiverDialog
+		socked
+		绑定发送端
+		接收数据
+
+		qint64 QUdpSocket::writeDatagram(
+		const QByteArray &datagram, 
+		const QHostAddress &host,
+		quint16 port)
+		
+		qint64 QUdpSocket::readDatagram(
+		char *data,   // 数据
+		qint64 maxSize,  // 大小
+		QHostAddress *address = nullptr, 
+		quint16 *port = nullptr)
+
+
+
+
+
+
+【2】基于TCP的网络聊天室
+	服务端：server
+		QTcpServer类---》并发服务器
+		bool listen(
+		const QHostAddress &address = 
+			QHostAddress::Any, 
+		quint16 port = 0)
+		
+		// 客户端连接产生信号
+		[signal] void newConnection()
+		
+		// 获取客户端连接桃子
+		QTcpSocket * nextPendingConnection()	
+		
+	客户端：client
+		QTcpSocked类
+
+
+
+
+
+
+
+
+
+
+	
+	
+	
+	
+	
+	

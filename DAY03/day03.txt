@@ -1,0 +1,115 @@
+回顾：
+	designer--》ui设计
+	qtcreator--》qt创造器--》IDE
+	
+	案例1：乘法器
+	案例2：登录框
+	
+【1】资源与图片
+	资源：
+	1>利用QT创造器和资源编译器(rcc)可以很方便地在工程中添加图像、
+		音视频等多媒体资源，并与应用程序结合在一起
+	
+	2>事实上Qt的资源由两部分组成
+		媒体文件：图像、音视频文件本身，如：logo.jpg
+		资源脚本：用于描述资源的XML文件，如： ShowPics.qrc
+
+	3>C++编译器无法理解二进制形式的媒体文件和XML格式的
+	资源脚本，因此需要先用QT的资源编译器rcc将资源
+	脚本连同它所引用的媒体文件一起编译成C++源文件
+		rcc -name ShowPics ShowPics.qrc -o qre_ShowPics.cpp
+	4>资源数据作为C++代码的一部分被嵌入到可执行程序中
+	5>以上编译过程已被包含在 qmake生成的 Makefile脚本中
+	
+	以上操作，不需要自己完成，qt创造器自动完成。
+	
+【2】绘制事件和画家；
+	
+	1》什么是事件？
+	事件是由窗口系统或者自身产生的，用以响应所发生的
+	各类事情，比如用户按下并释放了键盘或者鼠标、窗口因
+	暴露而需要重绘、定时器到期而应有所动作，等等
+	
+	从某种意义上讲，事件比信号更原始，甚至可以认为大多
+	数信号其实都是由事件产生的。比如一个下压式按钮首先
+	感受到的是鼠标事件，在进行必要的处理以产生按钮下沉
+	继而弹起的视觉效果之后，才会发射 clicked信号
+	
+	2》如何处理事件？
+	1.当事件发生时，首先被调用的是QObject类中的虚函数event()，
+	其 QEvent型参数标识了具体的事件类型
+		bool QObject:: event (QEvent* e)
+	2.作为QObject类的子类， QWidget类覆盖了其基类中的
+	event()虚数，并根据具体事件调用具体事件处理函数
+		void QWidget: mousePressEvent (QMouse Event* e)
+		void QWidget:: mouseReleaseEvent (QMouse Event* e)
+		void QWidget: paintEvent (PaintEvent* e)
+	3.而这些事件处理函数同样也是虚函数，也可以被 QWidget类
+	的子类覆盖，以提供针对不同窗口部件类型的事件处理
+	QObject -》QWidget -》QDialog -》showpicsDialog
+	4.部件的使用者所关心的往往是定义什么样的槽处理什么样的信号，
+	而不见的实现者更关心覆盖哪些事件处理函数	
+	
+	5. 当有下列情况之一发生时，窗口部件会收到绘制事件，
+		即 QWidget类的 paintEvent()虚函数会被调用
+		窗口被创建以后第一次显示出来
+		窗口由隐藏状态转变为可见状态
+		窗口由最小化状态转变为正常或最大化状态
+		窗口超出屏幕边界的区域进入屏幕范围之内
+		窗口被遮挡的区域因某种原因重新暴露出来
+		窗口因尺寸大小的变化需要呈现更多的内容
+		QWidget类的 update()成员函数被调用
+		
+		
+	6. QPainter类 画家类
+		
+		drawImage(const QRect &, const QImage &)
+		
+		QRect类
+		QFrame类
+			rect
+		QImage类
+	
+	7. QImage
+	
+	
+	8. 绘制ui
+		Frame组件
+			垂直延展
+				vertical policy--->expanding
+		push button
+			设置字体
+				Font ---> 24
+	9. 添加资源文件
+	File——》new file or project --》QT---》QT Resource file
+		继续向下进行选择配置 
+		
+	ADD--》add prefix  --》目录: /
+	add--> add file
+	
+	
+【3】案例：摇奖机	
+	创建工程
+	
+	导入资源文件
+	
+	绘制ui
+	
+	QTimer类
+		start()
+		setInterval()
+		stop()
+		timeout()
+		
+	QRandomGenerator类-->产生随机数
+	
+【4】案例，获取网卡信息
+	QHostInfo类
+	
+	QNetworkInterface类 ，获取网卡信息
+	
+	
+	
+	
+	
+	

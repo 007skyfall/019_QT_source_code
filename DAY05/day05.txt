@@ -1,0 +1,161 @@
+192.168.1.111:5901
+
+回顾：
+	QUdpSocked类
+	
+	QTckSocked类
+	
+	QTcpserver类
+	
+【1】QT操作sqlite3数据库
+	id      name     score
+
+	1. 创建表
+	CREATE Table table_name(
+		con_name1  类型  约束,
+		con_name2  类型  约束,
+		con_name3  类型  约束,
+	)
+	
+	类型：
+	INT
+	TEXT
+	REAL 浮点数
+	
+	约束：
+		PRIMARY KEY  主键
+		NOT NULL     非空
+		UNIQUE    唯一性
+
+	2. 删除表
+	DROP TABLE table_name
+	
+	3. 插入数据
+	INSERT into table_name
+	(id, name, score)
+	VALUES(10001,zhao,88)
+	
+	4. 删除数据
+	delete from table_name WHERE
+	(cond)
+	
+	5. 修改
+	UPDATE table_name SET 修改值
+	WHERE (cond)
+	
+	6. 查询
+	SELECT * FROM table_name
+
+	SELECT 字段1,字段2 FROM table_name
+		WHERE cond ORDER BY ASC|DESC
+
+【2】案例：学生成绩管理系统
+	1. 对成绩进行排序，根据ID， 根据成绩
+	2. 根据ID查询，查询成句
+	3. 录入成绩
+	4. 根据ID进行修改
+	5. 根据ID删除数据
+	
+	1. 设计UI
+	
+	2. 写代码
+	QSqlDatabase类 ： 用来连接数据库
+	// 和数据库建立连接
+	QSqlDatabase db = QSqlDatabase::addDatabase("QPSQL");
+	
+Driver Type Description
+QDB2       	IBM DB2
+QIBASE		Borland InterBase Driver
+QMYSQL		MySQL Driver
+QOCI		Oracle Call Interface Driver
+QODBC		ODBC Driver (includes Microsoft SQL Server)
+QPSQL		PostgreSQL Driver
+QSQLITE		SQLite version 3 or above
+QSQLITE2	SQLite version 2
+QTDS		Sybase Adaptive Server
+		// 远程连接的主机名
+      db.setHostName("acidalia");
+		// 要连接的数据库文件，
+		如果存在，直接使用，如果不存在，创建数据库文件
+      db.setDatabaseName("customdb");
+		// 主机的用户名
+      db.setUserName("mojito");
+		// 用户密码
+      db.setPassword("J0a1m8");
+		// 打开数据
+      bool ok = db.open();
+	QSqlQuery/QSqlQueryModel: 执行sql语句
+	  实例化对象
+	  QSqlQuery query;
+	  准备SQL语句
+      query.prepare("INSERT INTO person (id, forename, surname) "
+                    "VALUES (:id, :forename, :surname)");
+      query.bindValue(":id", 1001);
+      query.bindValue(":forename", "Bart");
+      query.bindValue(":surname", "Simpson");
+	  执行SQL语句
+      query.exec();
+	
+	QSqlError类：错误信息
+	
+	
+	QSqlQueryModel类
+	QSqlQueryModel *model = new QSqlQueryModel;
+    model->setQuery("SELECT name, salary FROM employee");
+
+    QTableView *view = new QTableView;
+    view->setModel(model);
+	
+	
+【1】回顾
+	1. 连接数据库  QSqlDatabase类
+	
+		QSqlDatabase * db = new QSqlDatabase(this);
+		db = QSqlDatabase::addDatabase("QSQLITE");
+		db->setDatabaseName("****.db");
+		
+		bool ok = db.open();
+			
+			db.QSqlError().text()
+	
+	2. 执行sql语句 
+		QSqlQuery 
+		QSqlQueryModel 
+		
+		QSqlQuery query;
+		query.prepare("SQL语句");
+		query.bindValue(":XX",XX);
+		query.exec();
+		
+		QString sqlstr = QString("SQL语句 %1,%2")
+					.arg(***).arg(***);
+		query.exec(sqlstr);
+		
+		QSqlQueryModel model;
+		QString sqlstr = QString("SQL语句 %1,%2")
+					.arg(***).arg(***);
+		model.setQuery(sqlstr);
+		
+		
+		QTableView *table = new QTableView(this);
+		table.setModel(&model);
+		table.show();
+	
+	
+	
+	
+	
+	
+	
+	
+
+
+
+
+
+
+
+
+
+
+

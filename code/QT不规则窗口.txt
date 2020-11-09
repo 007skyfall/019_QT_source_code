@@ -1,0 +1,40 @@
+首先准备两张图，一张是窗口的背景图片，另一张是蒙板(mask)，蒙板图片的颜色有两种，即黑色和白色，黑色的区域是保留下来的。白色的区域是要删掉的。
+
+1. 使用无边界的窗口
+在构造函数中添加一条代码，设置窗口的风格
+
+setWindowFlags(Qt::Window | Qt::CustomizeWindowHint); 【可以不写】
+
+设置蒙版和背景图片
+QPixmap pixmapMask(":/images/mask.jpg");
+ QPixmap pixmapBg(":/images/bg.jpg");
+ QBitmap bm;
+ bm = pixmapMask;
+ setMask(bm);
+
+ //背景图片
+ QPalette pal;
+ pal.setBrush(QPalette::Window, QBrush(pixmapBg));
+ setPalette(pal);
+
+2. 窗口的移动
+由于上述窗口不受窗口管理器的管理的特性，所以移动窗口需要特殊处理，一般的 方法是截取根Widget的鼠标按钮事件，自己处理鼠标点击和移动的事件。
+
+//鼠标事件 窗口移动
+void slphone::mouseMoveEvent(QMouseEvent *e)
+{
+ QPoint newpos = e->globalPos();
+ QPoint upleft = pos0 + newpos - last;
+ move(upleft);
+}
+
+//鼠标事件窗口移动
+void slphone::mousePressEvent(QMouseEvent *e)
+{
+ last = e->globalPos();
+ pos0 = e->globalPos() - e->pos();
+}
+
+这里我们取得的鼠标位置是绝对位置，即相对于根窗口的位置，同时也记录下窗口 左上角的位置，当鼠标移动时，取得新的绝对位置，则窗口左上角 的新位置应该 是原来位置与鼠标移动的位置之差。
+
+如果mask图片做的不好，那么展现出来的窗口周围会有一些小点点。。

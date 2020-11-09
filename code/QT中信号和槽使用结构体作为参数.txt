@@ -1,0 +1,38 @@
+1.首先是结构体的使用，需要使用Q_DECLARE_METATYPE宏
+如：
+struct DataStruct
+{
+    QByteArray DstAddr;
+    QByteArray ClusterId;
+    int DstEndpoint;
+    int DeviceEndpoint;
+    int CommandID;
+    QByteArray AttributeID;
+    int DataType;
+};
+Q_DECLARE_METATYPE(DataStruct)  //这个宏具体的用法参考帮助文档
+
+2.然后是把该结构体封装如一个QVariant
+
+    DataStruct askData;
+    QVariant DataVar;
+    DataVar.setValue(askData);
+    
+3.然后是对QVariant进行注册，因为信号和槽的参数类型并不认识QVariant
+
+qRegisterMetaType<QVariant>("QVariant"); //写在构造函数里
+
+4.然后这个类中的信号就可以将QVariant作为参数了
+void send_askData(QVariant dataVar);
+
+5.接收类中，由于包含了发射类的头文件，所以不必再对结构体进行定义
+connect(readThread,SIGNAL(send_askData(QVariant)),this,SLOT(AF_DATA_REQUEST(QVariant)));
+在槽函数中
+    DataStruct askData;
+    askData = dataVar.value<DataStruct>();
+    这样就可以提取出容器内的结构体数据，并进行操作了，这对需要传输比较复杂的数据时效果比较好
+    
+    
+    
+    
+    个人参考网上资料进行总结，欢迎讨论哈     木马

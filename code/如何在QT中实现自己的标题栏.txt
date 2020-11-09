@@ -1,0 +1,36 @@
+    有时候我们觉得QMainWindow的标题栏不太适合我们的程序要求，而想设计自己的标题栏。这时在构造QMainWindow的时候我们可以设置标记为Qt::FramelessWindowHint，这时我们将得到一个无标题栏的窗口。但是问题也随之而来：我们无法移动这个窗口（有标题栏的时候我们可以通过点击标题栏实现窗口的拖曳）。这时我们可以通过重载QMainWindow的两个成员函数实现窗口的拖动功能：
+
+last 和 pos0分别为MainWindow的成员变量
+void MainWindow::mouseMoveEvent(QMouseEvent *e)
+{
+    QPoint temp = e->pos();
+    const int pos_min_x = ui->titleWidget->pos().x();
+    const int pos_max_x = pos_min_x + ui->titleWidget->width();
+    const int pos_min_y = ui->titleWidget->pos().y();
+    const int pos_max_y = pos_min_y + ui->titleWidget->height();
+    if ( temp.x()>pos_min_x && temp.x()<pos_max_x && temp.y()>pos_min_y && temp.y()<pos_max_y )
+    {
+
+        //只对标题栏范围内的鼠标事件进行处理
+        QPoint newpos = e->globalPos();
+        QPoint upleft = pos0 + newpos - last;
+        move(upleft);
+    }
+}
+
+void MainWindow::mousePressEvent(QMouseEvent *e)
+{
+    QPoint temp = e->pos();
+    const int pos_min_x = ui->titleWidget->pos().x();
+    const int pos_max_x = pos_min_x + ui->titleWidget->width();
+    const int pos_min_y = ui->titleWidget->pos().y();
+    const int pos_max_y = pos_min_y + ui->titleWidget->height();
+    if ( temp.x()>pos_min_x && temp.x()<pos_max_x && temp.y()>pos_min_y && temp.y()<pos_max_y )
+    {
+
+        //只对标题栏范围内的鼠标事件进行处理。
+        last = e->globalPos();
+        pos0 = e->globalPos() - e->pos();
+    }
+}
+

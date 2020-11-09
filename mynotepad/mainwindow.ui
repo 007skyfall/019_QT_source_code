@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>906</width>
+    <height>738</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralWidget">
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <item>
+     <widget class="QTextEdit" name="textEdit">
+      <property name="styleSheet">
+       <string notr="true">border-image: url(:/new/image/image/demo.jpg);</string>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>906</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="File">
+    <property name="title">
+     <string>文件(&amp;F）</string>
+    </property>
+    <addaction name="newAction"/>
+    <addaction name="openAction"/>
+    <addaction name="saveAction"/>
+    <addaction name="saveAsAction"/>
+    <addaction name="printAction"/>
+    <addaction name="separator"/>
+    <addaction name="quitAction"/>
+   </widget>
+   <widget class="QMenu" name="Edit">
+    <property name="title">
+     <string>编辑(&amp;E)</string>
+    </property>
+    <addaction name="undoAction"/>
+    <addaction name="redoAction"/>
+    <addaction name="separator"/>
+    <addaction name="copyAction"/>
+    <addaction name="cutAction"/>
+    <addaction name="pasteAction"/>
+    <addaction name="selectAllAction"/>
+    <addaction name="separator"/>
+    <addaction name="fontAction"/>
+    <addaction name="datetimeAction"/>
+    <addaction name="colorAction"/>
+   </widget>
+   <widget class="QMenu" name="Help">
+    <property name="title">
+     <string>帮助(&amp;H)</string>
+    </property>
+    <addaction name="updateAction"/>
+    <addaction name="aboutSoftwareAction"/>
+    <addaction name="helpAction"/>
+    <addaction name="aboutOfficialAction"/>
+    <addaction name="aboutQtAction"/>
+   </widget>
+   <addaction name="File"/>
+   <addaction name="Edit"/>
+   <addaction name="Help"/>
+  </widget>
+  <widget class="QStatusBar" name="statusBar"/>
+  <widget class="QToolBar" name="mainToolBar">
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+  </widget>
+  <action name="newAction">
+   <property name="icon">
+    <iconset resource="image/res.qrc">
+     <normaloff>:/new/image/butterfly1.png</normaloff>:/new/image/butterfly1.png</iconset>
+   </property>
+   <property name="text">
+    <string>新建(&amp;N)</string>
+   </property>
+  </action>
+  <action name="openAction">
+   <property name="icon">
+    <iconset>
+     <normaloff>:/new/image/image/open.png</normaloff>:/new/image/image/open.png</iconset>
+   </property>
+   <property name="text">
+    <string>打开(&amp;O)</string>
+   </property>
+  </action>
+  <action name="saveAction">
+   <property name="icon">
+    <iconset>
+     <normaloff>:/new/image/image/save.png</normaloff>:/new/image/image/save.png</iconset>
+   </property>
+   <property name="text">
+    <string>保存(&amp;S)</string>
+   </property>
+  </action>
+  <action name="printAction">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="image/res.qrc">
+     <normaloff>:/new/image/Luffy.png</normaloff>:/new/image/Luffy.png</iconset>
+   </property>
+   <property name="text">
+    <string>打印(&amp;P)</string>
+   </property>
+   <property name="priority">
+    <enum>QAction::NormalPriority</enum>
+   </property>
+  </action>
+  <action name="quitAction">
+   <property name="text">
+    <string>退出(&amp;X)</string>
+   </property>
+   <property name="iconText">
+    <string>退出(X)</string>
+   </property>
+   <property name="toolTip">
+    <string>退出(X)</string>
+   </property>
+  </action>
+  <action name="undoAction">
+   <property name="icon">
+    <iconset>
+     <normaloff>:/new/image/image/undo.png</normaloff>:/new/image/image/undo.png</iconset>
+   </property>
+   <property name="text">
+    <string>撤销(U)</string>
+   </property>
+  </action>
+  <action name="redoAction">
+   <property name="icon">
+    <iconset>
+     <normaloff>:/new/image/image/redo.png</normaloff>:/new/image/image/redo.png</iconset>
+   </property>
+   <property name="text">
+    <string>重做(&amp;R)</string>
+   </property>
+  </action>
+  <action name="copyAction">
+   <property name="icon">
+    <iconset>
+     <normaloff>:/new/image/image/copy.png</normaloff>:/new/image/image/copy.png</iconset>
+   </property>
+   <property name="text">
+    <string>复制(&amp;C)</string>
+   </property>
+  </action>
+  <action name="cutAction">
+   <property name="icon">
+    <iconset>
+     <normaloff>:/new/image/image/cut.png</normaloff>:/new/image/image/cut.png</iconset>
+   </property>
+   <property name="text">
+    <string>剪切(&amp;X)</string>
+   </property>
+  </action>
+  <action name="pasteAction">
+   <property name="icon">
+    <iconset>
+     <normaloff>:/new/image/image/paste.png</normaloff>:/new/image/image/paste.png</iconset>
+   </property>
+   <property name="text">
+    <string>粘贴(&amp;P)</string>
+   </property>
+  </action>
+  <action name="selectAllAction">
+   <property name="icon">
+    <iconset>
+     <normaloff>:/new/image/image/cut.jpg</normaloff>:/new/image/image/cut.jpg</iconset>
+   </property>
+   <property name="text">
+    <string>全选(&amp;A)</string>
+   </property>
+  </action>
+  <action name="fontAction">
+   <property name="text">
+    <string>字体(&amp;F)</string>
+   </property>
+  </action>
+  <action name="datetimeAction">
+   <property name="text">
+    <string>日期(&amp;D)</string>
+   </property>
+  </action>
+  <action name="colorAction">
+   <property name="text">
+    <string>颜色(&amp;L)</string>
+   </property>
+  </action>
+  <action name="saveAsAction">
+   <property name="text">
+    <string>另存为(&amp;A)</string>
+   </property>
+  </action>
+  <action name="updateAction">
+   <property name="text">
+    <string>更新(&amp;U)</string>
+   </property>
+  </action>
+  <action name="aboutSoftwareAction">
+   <property name="text">
+    <string>关于软件(&amp;S)</string>
+   </property>
+  </action>
+  <action name="helpAction">
+   <property name="text">
+    <string>帮助(&amp;E)</string>
+   </property>
+  </action>
+  <action name="aboutOfficialAction">
+   <property name="text">
+    <string>关于官网(&amp;W)</string>
+   </property>
+  </action>
+  <action name="aboutQtAction">
+   <property name="text">
+    <string>关于Qt(&amp;Q)</string>
+   </property>
+  </action>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <resources>
+  <include location="image/res.qrc"/>
+ </resources>
+ <connections/>
+</ui>

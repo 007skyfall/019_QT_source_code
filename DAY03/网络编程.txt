@@ -1,0 +1,316 @@
+【1】、网络基础知识
+	1. 所有的网络编程都是基于客户端和服务器的架构  c/s
+	2. 什么是协议？就是规则。
+		比如：水晶头大小和网卡预留的水晶头插口需要遵守一种协议。电气协议。
+
+	3. 网络通讯采用的协议是TCP/IP协议簇
+		1》osi七层模型
+			应用层 表示层 会话层 传输层 网络层 数据链路层 物理层
+		2》TCP/IP协议分为四层或者五层。
+			应用层、传输层、网络层、链路层
+			应用层、传输层、网络层、链路层、物理层
+			
+			【链路层】：由底层网络定义的协议
+			包括操作系统中的设备驱动程序、计算机中对应的网络接口卡
+
+			【网络层】：IP
+			处理分组在网络中的活动，比如分组的选路。
+
+			【传输层】：TCP  UDP
+			主要为两台主机上的应用提供端到端的通信。
+
+			【应用层】：HTTP FTP TFTP
+			负责处理特定的应用程序细节。
+
+	4. 网络地址
+		ip地址 
+			IPV4  32位      0~255.0~255.0~255.0~255   4G
+			IPV6  128位     4G*4G*4G*4G
+		网卡的MAC地址    6个字节/48位   物理地址 
+			0~0xFF.0~0xFF.0~0xFF.0~0xFF.0~0xFF.0~0xFF
+		如何察看一台机器的ip地址和物理地址：ifconfig
+
+		端口号
+		
+【2】 基于TCP的网络编程
+	基于TCP的编程模型
+
+1、基于TCP的服务器端编程
+	(1)创建通讯端socket(2),获取通讯描述符
+		socket(2)
+		#include <sys/types.h>          /* See NOTES */
+		#include <sys/socket.h>
+		int socket(int domain, int type, int protocol);
+		功能：创建通讯端
+		参数：
+		domain：
+			AF_INET：IPV4  协议簇
+			AF_INET6：IPV6 协议簇
+		type：
+			SOCK_STREAM：tcp的格式
+			SOCK_DGRAM： udp的格式
+		protocol：指定协议类型
+			0
+		返回值：
+			-1  错误  errno被设置
+			新的文件描述符
+
+	(2) 将通讯描述符和服务器的IP地址和端口号绑定
+		bind(2)
+		#include <sys/types.h>          /* See NOTES */
+		#include <sys/socket.h>
+		int bind(int sockfd, const struct sockaddr *addr,
+						socklen_t addrlen);
+		功能：将通讯描述符和服务器的地址空间绑定
+		参数：
+		sockfd：通过socket(2)获取到的通讯描述符
+		addr：指定了服务器的地址空间
+		addrlen：指定了addr参数的地址空间的长度
+		返回值：
+		0   成功
+		-1  错误  errno被设置
+		struct sockaddr {
+			   sa_family_t sa_family;
+			   char        sa_data[14];
+		}；
+
+	(3)监听通讯描述符
+		listen(2)
+		#include <sys/types.h>          /* See NOTES */
+		#include <sys/socket.h>
+		int listen(int sockfd, int backlog);
+		功能：在sockfd上监听即将到来的连接
+		参数：
+		sockfd：指定通讯描述符
+		backlog：客户端最大的决连接数
+		返回值：
+		0   成功
+		-1 错误  errno被设置
+
+	(4)阻塞等待客户端请求的到来，获取连接描述符
+		accept(2)
+		#include <sys/types.h>          /* See NOTES */
+		#include <sys/socket.h>
+		int accept(int sockfd, struct sockaddr *addr,\
+				 socklen_t *addrlen);
+		功能：在sockfd上接收连接
+		参数：
+		sockfd：通讯描述符  socket(2)的返回值
+		addr：  客户端的地址空间填充addr指定的空间里。
+		如果addr指定为NULL，那么addrlen也需要指定为NULL。
+
+		addrlen：客户端地址空间的尺寸
+		返回值：
+		-1  错误  errno被设置
+		连接描述符（使用这个连接描述符和客户端进行通讯）。
+
+
+	(5)获取客户端的数据
+		read(connfd,,);
+	(6)数据处理
+	(7)将处理后的数据发送给客户端
+		write(connfd,,);
+	(8) 关闭和客户端的连接
+		close(connfd);
+
+	补充：
+	(1)、主机字节序(小端)  网络字节序(大端)
+		htonl
+		htons
+		ntohl
+		ntohs
+		#include <arpa/inet.h>
+		uint32_t htonl(uint32_t hostlong);
+		uint16_t htons(uint16_t hostshort);
+		uint32_t ntohl(uint32_t netlong);
+		uint16_t ntohs(uint16_t netshort);
+		h   host
+		n   net
+		l   long
+		s   short
+
+	(2)、具体的网络地址空间和通用的网络地址空间转换
+		具体网络协议族有ipv4 ipv6 local unix。
+		通用的地址空间 struct sockaddr类型的
+		bind、accept函数中的参数需要的是通用地址空间。
+		int *p； char *q;
+		void *.
+		使用函数inet_pton(3)
+		#include <arpa/inet.h>
+		int inet_pton(int af, const char *src, void *dst);
+		功能：text to binary
+		参数：
+		af:
+		AF_INET:IPV4
+		AF_INET6:IPV6
+		src:  字符串格式的ip地址
+		dst：strcut in_addr类型的变量
+		返回值：
+		1  成功
+		0   字符串错误
+		-1  失败  errno被设置
+
+		inet_ntop(3)
+		#include <arpa/inet.h>
+		const char *inet_ntop(int af, const void *src,
+								char *dst, socklen_t size);
+		功能：binary to text
+		参数：
+		af：
+		AF_INET:IPV4
+		AF_INET6:IPV6
+		src: struct in_addr
+
+		dst：字符串地址空间
+		size：指定了buf的有效字节数
+
+		返回值：
+		NULL  错误  errno被设置
+		指向dst空间的地址
+
+	(3)、
+		struct sockaddr_in{
+			sa_family_t     sin_family   AF_INET.
+				in_port_t       sin_port     Port number.
+				struct in_addr  sin_addr     IP address.
+		};
+
+		struct in_addr{
+			in_addr_t  s_addr;
+		};
+
+		举例，编写代码实现基于TCP服务器端的程序。
+		代码参见  server.c
+
+
+2、基于TCP的客户端编程
+	(1) 使用socket(2)创建通讯描述符
+	(2) 使用connect(2)连接服务器
+	#include <sys/types.h>          /* See NOTES */
+	#include <sys/socket.h>
+	int connect(int sockfd, const struct sockaddr *addr,
+					   socklen_t addrlen);
+	功能：连接sockfd到服务器的地址空间
+	参数：
+	sockfd：socket(2)的返回值
+	addr：   服务器的地址空间
+	addrlen：addr的空间长度
+	返回值：
+	0   成功
+	-1  失败  errno被设置
+
+	(3) 使用write向服务器发送数据
+	(4) 等待服务器的响应
+	(5) 关闭和服务器的连接
+
+	举例 编写代码实现基于TCP的客户端编程。
+	代码参见  client.c
+	
+3. 修改客户端代码，程序满足可以向任意服务器发送消息。
+	client  服务器的ip地址
+
+小结：
+	客户端向服务器端发送字符串     
+
+	将客户端发送过来的字符串转化为大写
+
+	客户端给服务器端发送quit字符串的时候，服务器端关闭和客户端的连接。
+
+	一个客户端和服务器端通讯的时候，其他的客户端能否和服务器端通讯。
+		（不能，后边并发服务器解决）
+
+	服务器端如何获取客户端的ip地址和端口号
+	accept(2) 动手脚
+	struct sockaddr_in client;
+	socklen_t len=sizeof(client);
+	accept(s_fd,(struct sockaddr *)&client,&len);
+	变量client里存放的就是客户端的ip地址和端口号
+	需要将ip地址从binary转化为text
+	char IP[128];
+	const char *inet_ntop(AF_INET,&client.sin_addr,IP,128);
+	printf("%s\n",inet_nto(AF_INET,&client.sin_addr,IP,128));    
+
+【3】、并发服务器的实现
+	1、使用线程实现并发服务器
+	2、多路复用技术实现服务器的并发
+	select(2) poll(2) 
+	3、使用多进程实现服务器的并发
+	父进程              
+	负责监听客户连接的到来
+	关闭connfd；
+	waitpid(2)非阻塞回收子进程的尸体。
+
+	子进程
+	负责和客户的沟通
+	子进程只使用connfd和客户端沟通
+	close(s_fd);
+	数据处理
+	关闭和客户端的连接
+	退出子进程
+
+	fork在什么地方添加比较合适？
+	紧接在accept(2)之后
+
+	代码实现并发服务器。代码参见bserver.c	
+	
+【4】、基于UDP的编程
+
+	1、基于UDP的客户端编程
+		(1)、创建通讯描述符
+		s_fd=socket(AF_INET,SOCK_DGRAM,0);
+		(2)、使用通讯描述符向服务器端发送数据
+		sendto(2)
+		(3)、等待服务器端的响应信息
+		recvfrom(2)
+		(4)、关闭通讯描述符
+		close(s_fd);
+
+	2、基于UDP的服务器端编程
+		(1)、创建通讯描述符
+		s_fd=socket(AF_INET,SOCK_DGRAM,0);
+		(2)、将通讯描述符和服务器的地址空间绑定
+		bind(s_fd,(struct sockaddr *)&server,sizeof(server));
+
+		(3)、recvfrom等待客户端数据的到来
+		recvfrom(2)
+		#include <sys/types.h>
+		#include <sys/socket.h>
+		ssize_t recvfrom(int sockfd, void *buf, size_t len, \
+			int flags,struct sockaddr *src_addr,\
+			 socklen_t *addrlen);
+		功能：从socket接受消息
+		参数：
+		sockfd：socket(2)的返回值
+		buf：指定了接收消息的空间地址
+		len:接收消息的长度
+		flags:0
+		src_addr:保存对面的地址空间，如果指定为NULL。
+			那么addrlen也要之定位空。
+		addrlen:指定src_addr变量空间的长度。
+		返回值：
+		接收到的字节数
+		-1  错误产生
+		对面正常关闭返回0
+
+		(4)、处理客户端的数据
+		(5)、回应客户端的消息
+		sendto(2)
+		#include <sys/types.h>
+		#include <sys/socket.h>
+		ssize_t sendto(int sockfd, const void *buf, size_t len,\ 	int flags,const struct sockaddr *dest_addr,\ 		socklen_t addrlen);
+		功能：在socket上发送一个消息
+		参数：
+		sockfd：socket(2)的返回值
+		buf：buf指定了消息存放的地址
+		len:指定要发送的消息的长度
+		flags:0
+		dest_addr:目标地址
+		addrlen:目标地址的长度
+		返回值：
+		-1   错误   errno被设置
+		发送出去的字节数
+
+		举例，编写代码实现udp的客户端和服务器端的编程
+
+		代码参见 userver.c   uclient.c
+
